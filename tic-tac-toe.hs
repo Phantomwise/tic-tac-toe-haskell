@@ -1,13 +1,5 @@
 -- Tic Tac Toe
 
--- Define color codes
-red     = "\ESC[0;31m"
-green   = "\ESC[0;32m"
-yellow  = "\ESC[0;33m"
-blue    = "\ESC[0;34m"
-magenta = "\ESC[0;35m"
-cyan    = "\ESC[0;36m"
-reset   = "\ESC[0m"
 
 -- Define a new type for the content of the cells
 data Cell = Empty | X | O
@@ -19,7 +11,30 @@ instance Show Cell where
     show X = "X"
     show O = "O"
 
--- Board cell ids:
+
+-- Define color codes
+red     = "\ESC[0;31m"
+green   = "\ESC[0;32m"
+yellow  = "\ESC[0;33m"
+blue    = "\ESC[0;34m"
+magenta = "\ESC[0;35m"
+cyan    = "\ESC[0;36m"
+reset   = "\ESC[0m"
+
+
+-- Empty board:
+-- ┏━━━┳━━━┳━━━┓
+-- ┃ · ┃ · ┃ · ┃
+-- ┣━━━╋━━━╋━━━┫
+-- ┃ · ┃ · ┃ · ┃
+-- ┣━━━╋━━━╋━━━┫
+-- ┃ · ┃ · ┃ · ┃
+-- ┗━━━┻━━━┻━━━┛
+
+
+-- Cells IDs
+cellsids     = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
 -- ┏━━━┳━━━┳━━━┓
 -- ┃ 7 ┃ 8 ┃ 9 ┃
 -- ┣━━━╋━━━╋━━━┫
@@ -28,8 +43,6 @@ instance Show Cell where
 -- ┃ 1 ┃ 2 ┃ 3 ┃
 -- ┗━━━┻━━━┻━━━┛
 
--- Cells IDs
-cellsids     = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 -- Mapping cells IDs to rows, columns and diagonals
 row1ids      = [7, 8, 9]
@@ -41,14 +54,6 @@ column3ids   = [9, 6, 3]
 diagonal1ids = [7, 5, 3]
 diagonal2ids = [9, 5, 1]
 
--- Empty board:
--- ┏━━━┳━━━┳━━━┓
--- ┃ · ┃ · ┃ · ┃
--- ┣━━━╋━━━╋━━━┫
--- ┃ · ┃ · ┃ · ┃
--- ┣━━━╋━━━╋━━━┫
--- ┃ · ┃ · ┃ · ┃
--- ┗━━━┻━━━┻━━━┛
 
 -- Function to validate user input and convert it to an Int, brute force version
 validateUserInput :: Char -> Either String Int
@@ -71,6 +76,27 @@ validateUserInput k
 --   | k >= '1' && k <= '9' = Right (digitToInt k)
 --   | otherwise             = Left "Invalid input. Please enter a number from 1 to 9."
 -- I kinda like the other version better, keeping the alt for reference
+
+
+-- Function to get user input and validate it
+playerUserInput :: IO Int
+playerUserInput = do
+    putStrLn "Press a number from 1 to 9 to select a cell to play (numpad order)"
+    k <- getChar
+    _ <- getLine -- Trash everything after the first character and be mad at having to deal with newlines and buffers >_<
+    case validateUserInput k of
+        Left err -> do
+            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: Key pressed: " ++ cyan ++ [k] ++ reset)
+            putStrLn (red ++ "ERROR: " ++ reset ++ "Invalid input, please try again.")
+            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input invalid: " ++ cyan ++ show (validateUserInput k) ++ reset)
+            playerUserInput
+        Right n -> do
+            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: Key pressed: " ++ cyan ++ [k] ++ reset)
+            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input validated: " ++ "validateUserInput k = " ++ cyan ++ show (validateUserInput k) ++ reset)
+            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input validated: " ++ "n = " ++ cyan ++ show n ++ reset)
+            putStrLn ""
+            return n
+
 
 main :: IO ()
 main = do
@@ -133,26 +159,6 @@ main = do
     putStrLn (magenta ++ "DEBUG: " ++ reset ++ "Main: Printing updated board:")
     printBoard
     putStrLn ""
-
-
--- Function to get user input and validate it
-playerUserInput :: IO Int
-playerUserInput = do
-    putStrLn "Press a number from 1 to 9 to select a cell to play (numpad order)"
-    k <- getChar
-    _ <- getLine -- Trash everything after the first character and be mad at having to deal with newlines and buffers >_<
-    case validateUserInput k of
-        Left err -> do
-            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: Key pressed: " ++ cyan ++ [k] ++ reset)
-            putStrLn (red ++ "ERROR: " ++ reset ++ "Invalid input, please try again.")
-            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input invalid: " ++ cyan ++ show (validateUserInput k) ++ reset)
-            playerUserInput
-        Right n -> do
-            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: Key pressed: " ++ cyan ++ [k] ++ reset)
-            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input validated: " ++ "validateUserInput k = " ++ cyan ++ show (validateUserInput k) ++ reset)
-            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input validated: " ++ "n = " ++ cyan ++ show n ++ reset)
-            putStrLn ""
-            return n
 
 
 -- TODO:
