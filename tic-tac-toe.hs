@@ -27,16 +27,6 @@ ansi Cyan    = "\ESC[0;36m"
 ansi Reset   = "\ESC[0m"
 
 
--- Empty board:
--- ┏━━━┳━━━┳━━━┓
--- ┃ · ┃ · ┃ · ┃
--- ┣━━━╋━━━╋━━━┫
--- ┃ · ┃ · ┃ · ┃
--- ┣━━━╋━━━╋━━━┫
--- ┃ · ┃ · ┃ · ┃
--- ┗━━━┻━━━┻━━━┛
-
-
 -- Cells IDs
 cellsids     = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
@@ -50,6 +40,7 @@ cellsids     = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 
 -- Mapping cells IDs to rows, columns and diagonals
+row1ids, row2ids, row3ids, column1ids, column2ids, column3ids, diagonal1ids, diagonal2ids :: [Int]
 row1ids      = [7, 8, 9]
 row2ids      = [4, 5, 6]
 row3ids      = [1, 2, 3]
@@ -58,6 +49,32 @@ column2ids   = [8, 5, 2]
 column3ids   = [9, 6, 3]
 diagonal1ids = [7, 5, 3]
 diagonal2ids = [9, 5, 1]
+
+-- Function to print the current board
+printBoard :: [Cell] -> IO ()
+printBoard board = do
+
+    -- Map cells to board index
+    let cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9 :: Cell
+        cell1 = board !! 0
+        cell2 = board !! 1
+        cell3 = board !! 2
+        cell4 = board !! 3
+        cell5 = board !! 4
+        cell6 = board !! 5
+        cell7 = board !! 6
+        cell8 = board !! 7
+        cell9 = board !! 8
+
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "Main: Printing the current board:")
+    putStrLn "┏━━━┳━━━┳━━━┓"
+    putStrLn ("┃ " ++ show cell7 ++ " ┃ " ++ show cell8 ++ " ┃ " ++ show cell9 ++ " ┃")
+    putStrLn "┣━━━╋━━━╋━━━┫"
+    putStrLn ("┃ " ++ show cell4 ++ " ┃ " ++ show cell5 ++ " ┃ " ++ show cell6 ++ " ┃")
+    putStrLn "┣━━━╋━━━╋━━━┫"
+    putStrLn ("┃ " ++ show cell1 ++ " ┃ " ++ show cell2 ++ " ┃ " ++ show cell3 ++ " ┃")
+    putStrLn "┗━━━┻━━━┻━━━┛"
+    putStrLn ""
 
 
 -- Function to validate user input and convert it to an Int, brute force version
@@ -73,14 +90,6 @@ validateUserInput k
     | k == '8' = Right (8 :: Int)
     | k == '9' = Right (9 :: Int)
     | otherwise = Left "Invalid input. Please enter a number from 1 to 9."
-
--- Function to validate user input and convert it to an Int, alternative version
--- import Data.Char (digitToInt)
--- validateUserInput :: Char -> Either String Int
--- validateUserInput k
---   | k >= '1' && k <= '9' = Right (digitToInt k)
---   | otherwise             = Left "Invalid input. Please enter a number from 1 to 9."
--- I kinda like the other version better, keeping the alt for reference
 
 
 -- Function to get user input and validate it
@@ -106,50 +115,13 @@ playerUserInput = do
 main :: IO ()
 main = do
 
-    -- Set up cells
-    let cell1 :: Cell
-        cell1 = Empty
-        cell2 :: Cell
-        cell2 = Empty
-        cell3 :: Cell
-        cell3 = Empty
-        cell4 :: Cell
-        cell4 = Empty
-        cell5 :: Cell
-        cell5 = Empty
-        cell6 :: Cell
-        cell6 = Empty
-        cell7 :: Cell
-        cell7 = Empty
-        cell8 :: Cell
-        cell8 = Empty
-        cell9 :: Cell
-        cell9 = Empty
+    -- Set up the initial board
+    let board :: [Cell]
+        board = replicate 9 Empty
 
-    -- Bindings for printing the board
-    let printRow1 :: String
-        printRow1 = "┃ " ++ show cell7 ++ " ┃ " ++ show cell8 ++ " ┃ " ++ show cell9 ++ " ┃"
-        printRow2 :: String
-        printRow2 = "┃ " ++ show cell4 ++ " ┃ " ++ show cell5 ++ " ┃ " ++ show cell6 ++ " ┃"
-        printRow3 :: String
-        printRow3 = "┃ " ++ show cell1 ++ " ┃ " ++ show cell2 ++ " ┃ " ++ show cell3 ++ " ┃"
-
-    -- Function to print the updated board
-    let printBoard :: IO ()
-        printBoard = do
-             putStrLn "┏━━━┳━━━┳━━━┓"
-             putStrLn printRow1
-             putStrLn "┣━━━╋━━━╋━━━┫"
-             putStrLn printRow2
-             putStrLn "┣━━━╋━━━╋━━━┫"
-             putStrLn printRow3
-             putStrLn "┗━━━┻━━━┻━━━┛"
-             putStrLn ""
-
-    -- Print updated board
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "Main: Printing starting board (should be empty):")
-    printBoard
-    putStrLn ""
+    -- Print the initial board
+    printBoard board
+    print (board)
 
     -- Get user input
     n <- playerUserInput
@@ -162,7 +134,7 @@ main = do
 
     -- Print updated board
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "Main: Printing updated board:")
-    printBoard
+    printBoard board
     putStrLn ""
 
 
