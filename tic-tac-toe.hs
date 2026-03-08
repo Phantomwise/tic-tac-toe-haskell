@@ -174,9 +174,18 @@ main = do
     putStrLn ""
 
 
--- TODO:
--- - Refactor the board update in a less stupid way
--- - Implement occupancy check
--- - Implement player switching
--- - Implement different colors for each player
--- - Implement check for win conditions
+{-
+TODO:
+- Refactor the board update in a less stupid way
+- Implement occupancy check
+- Implement different colors for each player
+- Implement check for win conditions
+
+DONE:
+- Set up board
+- Get user input
+- Validate user input
+- Create a new board for each move
+- Alternate players
+- Track move count
+-}
