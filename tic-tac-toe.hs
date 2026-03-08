@@ -26,9 +26,10 @@ ansi Magenta = "\ESC[0;35m"
 ansi Cyan    = "\ESC[0;36m"
 ansi Reset   = "\ESC[0m"
 
-
+{-
 -- Cells IDs
 cellsids     = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+-}
 
 -- ┏━━━┳━━━┳━━━┓
 -- ┃ 7 ┃ 8 ┃ 9 ┃
@@ -126,30 +127,48 @@ main = do
     printBoard board
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board = " ++ ansi Cyan ++ show board ++ ansi Reset)
 
-    -- Get user input
+    -- Define player (Implement player rotation later)
+    let player1 :: Cell = X
+    let player2 :: Cell = O
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: player1 = " ++ ansi Cyan ++ show player1 ++ ansi Reset)
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: player2 = " ++ ansi Cyan ++ show player2 ++ ansi Reset)
+
+    -- Move 1: Get user input
     n <- playerUserInput
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
     putStrLn ""
 
-    -- Define val (Implement player rotation later)
-    let val :: Cell = X
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: val = " ++ ansi Cyan ++ show val ++ ansi Reset)
-
-    -- Update cells
+    -- Move 1: Update cells
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Updating cell variables (not yet working)")
-    let board1 = updateCell n val board
+    let board1 = updateCell n player1 board
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board1 = " ++ ansi Cyan ++ show board1 ++ ansi Reset)
     putStrLn ""
 
-    -- Print board1
+    -- Move 1: Print board
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Printing updated board:")
     printBoard board1
     putStrLn ""
 
+    -- Move 2: Get user input
+    n <- playerUserInput
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
+    putStrLn ""
+
+    -- Move 2: Update cells
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Updating cell variables (not yet working)")
+    let board2 = updateCell n player2 board1
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board2 = " ++ ansi Cyan ++ show board2 ++ ansi Reset)
+    putStrLn ""
+
+    -- Move 2: Print board
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Printing updated board:")
+    printBoard board2
+    putStrLn ""
+
 
 -- TODO:
--- - Update the cell variables based on user input, fill with an 'X' for now (currently not working)
--- - Implement check to see if the selected cell is already filled
+-- - Refactor the board update in a less stupid way
+-- - Implement occupancy check
 -- - Implement player switching
 -- - Implement different colors for each player
 -- - Implement check for win conditions
