@@ -122,7 +122,7 @@ main = do
 
     -- Get user input
     n <- playerUserInput
-    putStrLn (magenta ++ "DEBUG: " ++ reset ++ "Main: User selected cell: " ++ show n)
+    putStrLn (magenta ++ "DEBUG: " ++ reset ++ "Main: User selected cell: " ++ cyan ++ show n ++ reset)
     putStrLn ""
 
     -- Updated cells
@@ -143,13 +143,13 @@ playerUserInput = do
     _ <- getLine -- Trash everything after the first character and be mad at having to deal with newlines and buffers >_<
     case validateUserInput k of
         Left err -> do
-            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: Key pressed: " ++ [k])
-            putStrLn (red ++ "ERROR: " ++ reset ++ "playerUserInput: User input invalid: " ++ show (validateUserInput k))
+            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: Key pressed: " ++ cyan ++ [k] ++ reset)
+            putStrLn (red ++ "ERROR: " ++ reset ++ "playerUserInput: User input invalid: " ++ cyan ++ show (validateUserInput k) ++ reset)
             playerUserInput
         Right n -> do
-            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: Key pressed: " ++ [k])
-            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input validated: validateUserInput k = " ++ show (validateUserInput k))
-            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input validated: n = " ++ show n)
+            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: Key pressed: " ++ cyan ++ [k] ++ reset)
+            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input validated: " ++ "validateUserInput k = " ++ cyan ++ show (validateUserInput k) ++ reset)
+            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input validated: " ++ "n = " ++ cyan ++ show n ++ reset)
             putStrLn ""
             return n
 
