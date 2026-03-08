@@ -118,6 +118,12 @@ updateCell :: Int -> Cell -> [Cell] -> [Cell]
 updateCell pos val xs = take (pos - 1) xs ++ [val] ++ drop pos xs
 
 
+-- Player for each move
+playerMove :: Int ->  Cell
+playerMove m
+    | odd m = X
+    | otherwise = O
+
 main :: IO ()
 main = do
 
@@ -127,11 +133,9 @@ main = do
     printBoard board
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board = " ++ ansi Cyan ++ show board ++ ansi Reset)
 
-    -- Define player (Implement player rotation later)
-    let player1 :: Cell = X
-    let player2 :: Cell = O
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: player1 = " ++ ansi Cyan ++ show player1 ++ ansi Reset)
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: player2 = " ++ ansi Cyan ++ show player2 ++ ansi Reset)
+    -- Move 1
+    let move = 1
+    putStrLn ("It's " ++ ansi Yellow ++ "player " ++ show (playerMove move) ++ ansi Reset ++ "'s turn")
 
     -- Move 1: Get user input
     n <- playerUserInput
@@ -140,7 +144,7 @@ main = do
 
     -- Move 1: Update cells
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Updating cell variables (not yet working)")
-    let board1 = updateCell n player1 board
+    let board1 = updateCell n (playerMove move) board
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board1 = " ++ ansi Cyan ++ show board1 ++ ansi Reset)
     putStrLn ""
 
@@ -149,6 +153,10 @@ main = do
     printBoard board1
     putStrLn ""
 
+    -- Move 2
+    let move = 2
+    putStrLn ("It's " ++ ansi Yellow ++ "player " ++ show (playerMove move) ++ ansi Reset ++ "'s turn")
+
     -- Move 2: Get user input
     n <- playerUserInput
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
@@ -156,7 +164,7 @@ main = do
 
     -- Move 2: Update cells
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Updating cell variables (not yet working)")
-    let board2 = updateCell n player2 board1
+    let board2 = updateCell n (playerMove move) board1
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board2 = " ++ ansi Cyan ++ show board2 ++ ansi Reset)
     putStrLn ""
 
