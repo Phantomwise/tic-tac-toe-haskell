@@ -144,7 +144,8 @@ playerUserInput = do
     case validateUserInput k of
         Left err -> do
             putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: Key pressed: " ++ cyan ++ [k] ++ reset)
-            putStrLn (red ++ "ERROR: " ++ reset ++ "playerUserInput: User input invalid: " ++ cyan ++ show (validateUserInput k) ++ reset)
+            putStrLn (red ++ "ERROR: " ++ reset ++ "Invalid input, please try again.")
+            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input invalid: " ++ cyan ++ show (validateUserInput k) ++ reset)
             playerUserInput
         Right n -> do
             putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: Key pressed: " ++ cyan ++ [k] ++ reset)
