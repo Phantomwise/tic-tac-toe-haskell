@@ -12,14 +12,19 @@ instance Show Cell where
     show O = "O"
 
 
--- Define color codes
-red     = "\ESC[0;31m"
-green   = "\ESC[0;32m"
-yellow  = "\ESC[0;33m"
-blue    = "\ESC[0;34m"
-magenta = "\ESC[0;35m"
-cyan    = "\ESC[0;36m"
-reset   = "\ESC[0m"
+-- Define a new type for colors
+data AnsiColor = Red | Green | Yellow | Blue | Magenta | Cyan | Reset
+    deriving (Eq, Enum, Show)
+
+-- Map to ANSI color codes
+ansi :: AnsiColor -> String
+ansi Red     = "\ESC[0;31m"
+ansi Green   = "\ESC[0;32m"
+ansi Yellow  = "\ESC[0;33m"
+ansi Blue    = "\ESC[0;34m"
+ansi Magenta = "\ESC[0;35m"
+ansi Cyan    = "\ESC[0;36m"
+ansi Reset   = "\ESC[0m"
 
 
 -- Empty board:
@@ -86,14 +91,14 @@ playerUserInput = do
     _ <- getLine -- Trash everything after the first character and be mad at having to deal with newlines and buffers >_<
     case validateUserInput k of
         Left err -> do
-            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: Key pressed: " ++ cyan ++ [k] ++ reset)
-            putStrLn (red ++ "ERROR: " ++ reset ++ "Invalid input, please try again.")
-            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input invalid: " ++ cyan ++ show (validateUserInput k) ++ reset)
+            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: Key pressed: " ++ ansi Cyan ++ [k] ++ ansi Reset)
+            putStrLn (ansi Red ++ "ERROR: " ++ ansi Reset ++ "Invalid input, please try again.")
+            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: User input invalid: " ++ ansi Cyan ++ show (validateUserInput k) ++ ansi Reset)
             playerUserInput
         Right n -> do
-            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: Key pressed: " ++ cyan ++ [k] ++ reset)
-            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input validated: " ++ "validateUserInput k = " ++ cyan ++ show (validateUserInput k) ++ reset)
-            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input validated: " ++ "n = " ++ cyan ++ show n ++ reset)
+            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: Key pressed: " ++ ansi Cyan ++ [k] ++ ansi Reset)
+            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: User input validated: " ++ "validateUserInput k = " ++ ansi Cyan ++ show (validateUserInput k) ++ ansi Reset)
+            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: User input validated: " ++ "n = " ++ ansi Cyan ++ show n ++ ansi Reset)
             putStrLn ""
             return n
 
@@ -142,21 +147,21 @@ main = do
              putStrLn ""
 
     -- Print updated board
-    putStrLn (magenta ++ "DEBUG: " ++ reset ++ "Main: Printing starting board (should be empty):")
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "Main: Printing starting board (should be empty):")
     printBoard
     putStrLn ""
 
     -- Get user input
     n <- playerUserInput
-    putStrLn (magenta ++ "DEBUG: " ++ reset ++ "Main: User selected cell: " ++ cyan ++ show n ++ reset)
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "Main: User selected cell: " ++ ansi Cyan ++ show n ++ ansi Reset)
     putStrLn ""
 
     -- Updated cells
-    putStrLn (magenta ++ "DEBUG: " ++ reset ++ "Main: Updating cell variables (not yet working)")
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "Main: Updating cell variables (not yet working)")
     putStrLn ""
 
     -- Print updated board
-    putStrLn (magenta ++ "DEBUG: " ++ reset ++ "Main: Printing updated board:")
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "Main: Printing updated board:")
     printBoard
     putStrLn ""
 
