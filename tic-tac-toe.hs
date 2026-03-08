@@ -173,6 +173,26 @@ main = do
     printBoard board2
     putStrLn ""
 
+    -- Move 3
+    let move = 3
+    putStrLn ("It's " ++ ansi Yellow ++ "player " ++ show (playerMove move) ++ ansi Reset ++ "'s turn")
+
+    -- Move 3: Get user input
+    n <- playerUserInput
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
+    putStrLn ""
+
+    -- Move 3: Update cells
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Updating cell variables (not yet working)")
+    let board3 = updateCell n (playerMove move) board2
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board3 = " ++ ansi Cyan ++ show board3 ++ ansi Reset)
+    putStrLn ""
+
+    -- Move 3: Print board
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Printing updated board:")
+    printBoard board3
+    putStrLn ""
+
 
 {-
 TODO:
