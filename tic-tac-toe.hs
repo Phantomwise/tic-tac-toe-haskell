@@ -51,8 +51,8 @@ diagonal2ids = [9, 5, 1]
 -- ┗━━━┻━━━┻━━━┛
 
 -- Function to validate user input and convert it to an Int, brute force version
-validateInput :: Char -> Either String Int
-validateInput k
+validateUserInput :: Char -> Either String Int
+validateUserInput k
     | k == '1' = Right (1 :: Int)
     | k == '2' = Right (2 :: Int)
     | k == '3' = Right (3 :: Int)
@@ -66,14 +66,15 @@ validateInput k
 
 -- Function to validate user input and convert it to an Int, alternative version
 -- import Data.Char (digitToInt)
--- validateInput :: Char -> Either String Int
--- validateInput k
+-- validateUserInput :: Char -> Either String Int
+-- validateUserInput k
 --   | k >= '1' && k <= '9' = Right (digitToInt k)
 --   | otherwise             = Left "Invalid input. Please enter a number from 1 to 9."
 -- I kinda like the other version better, keeping the alt for reference
 
 main :: IO ()
 main = do
+
     -- Set up cells
     let cell1 :: Cell
         cell1 = Empty
@@ -93,6 +94,7 @@ main = do
         cell8 = Empty
         cell9 :: Cell
         cell9 = Empty
+
     -- Bindings for printing the board
     let printRow1 :: String
         printRow1 = "┃ " ++ show cell7 ++ " ┃ " ++ show cell8 ++ " ┃ " ++ show cell9 ++ " ┃"
@@ -100,6 +102,7 @@ main = do
         printRow2 = "┃ " ++ show cell4 ++ " ┃ " ++ show cell5 ++ " ┃ " ++ show cell6 ++ " ┃"
         printRow3 :: String
         printRow3 = "┃ " ++ show cell1 ++ " ┃ " ++ show cell2 ++ " ┃ " ++ show cell3 ++ " ┃"
+
     -- Function to print the updated board
     let printBoard :: IO ()
         printBoard = do
@@ -111,23 +114,48 @@ main = do
              putStrLn printRow3
              putStrLn "┗━━━┻━━━┻━━━┛"
              putStrLn ""
+
     -- Print updated board
-    putStrLn (magenta ++ "DEBUG: " ++ reset ++ "Printing starting board (should be empty):")
+    putStrLn (magenta ++ "DEBUG: " ++ reset ++ "Main: Printing starting board (should be empty):")
     printBoard
     putStrLn ""
+
     -- Get user input
-    putStrLn "Press a number from 1 to 9 to select a cell to play (numpad order)"
-    k <- getChar
-    _ <- getLine -- Trash everything after the first character and be mad at having to deal with newlines and buffers >_<
+    n <- playerUserInput
+    putStrLn (magenta ++ "DEBUG: " ++ reset ++ "Main: User selected cell: " ++ show n)
     putStrLn ""
-    putStrLn (magenta ++ "DEBUG: " ++ reset ++ "Key pressed: " ++ [k])
-    putStrLn (magenta ++ "DEBUG: " ++ reset ++ "validateInput k = " ++ show (validateInput k))
-    putStrLn ""
+
     -- Updated cells
-    putStrLn (magenta ++ "DEBUG: " ++ reset ++ "Updating cell variables (not yet working)")
+    putStrLn (magenta ++ "DEBUG: " ++ reset ++ "Main: Updating cell variables (not yet working)")
     putStrLn ""
 
     -- Print updated board
-    putStrLn (magenta ++ "DEBUG: " ++ reset ++ "Printing updated board:")
+    putStrLn (magenta ++ "DEBUG: " ++ reset ++ "Main: Printing updated board:")
     printBoard
     putStrLn ""
+
+
+-- Function to get user input and validate it
+playerUserInput :: IO Int
+playerUserInput = do
+    putStrLn "Press a number from 1 to 9 to select a cell to play (numpad order)"
+    k <- getChar
+    _ <- getLine -- Trash everything after the first character and be mad at having to deal with newlines and buffers >_<
+    case validateUserInput k of
+        Left err -> do
+            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: Key pressed: " ++ [k])
+            putStrLn (red ++ "ERROR: " ++ reset ++ "playerUserInput: User input invalid: " ++ show (validateUserInput k))
+            playerUserInput
+        Right n -> do
+            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: Key pressed: " ++ [k])
+            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input validated: validateUserInput k = " ++ show (validateUserInput k))
+            putStrLn (magenta ++ "DEBUG: " ++ reset ++ "playerUserInput: User input validated: n = " ++ show n)
+            putStrLn ""
+            return n
+
+
+-- TODO:
+-- - Update the cell variables based on user input, fill with an 'X' for now (currently not working)
+-- - Implement check to see if the selected cell is already filled
+-- - Implement player switching
+-- - Implement win condition checking
