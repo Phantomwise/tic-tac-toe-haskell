@@ -66,7 +66,7 @@ printBoard board = do
         cell8 = board !! 7
         cell9 = board !! 8
 
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "Main: Printing the current board:")
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "printBoard: Printing the current board:")
     putStrLn "┏━━━┳━━━┳━━━┓"
     putStrLn ("┃ " ++ show cell7 ++ " ┃ " ++ show cell8 ++ " ┃ " ++ show cell9 ++ " ┃")
     putStrLn "┣━━━╋━━━╋━━━┫"
@@ -112,29 +112,38 @@ playerUserInput = do
             return n
 
 
+-- Function to update the board
+updateCell :: Int -> Cell -> [Cell] -> [Cell]
+updateCell pos val xs = take (pos - 1) xs ++ [val] ++ drop pos xs
+
+
 main :: IO ()
 main = do
 
     -- Set up the initial board
     let board :: [Cell]
         board = replicate 9 Empty
-
-    -- Print the initial board
     printBoard board
-    print (board)
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board = " ++ ansi Cyan ++ show board ++ ansi Reset)
 
     -- Get user input
     n <- playerUserInput
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "Main: User selected cell: " ++ ansi Cyan ++ show n ++ ansi Reset)
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
     putStrLn ""
 
-    -- Updated cells
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "Main: Updating cell variables (not yet working)")
+    -- Define val (Implement player rotation later)
+    let val :: Cell = X
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: val = " ++ ansi Cyan ++ show val ++ ansi Reset)
+
+    -- Update cells
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Updating cell variables (not yet working)")
+    let board1 = updateCell n val board
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board1 = " ++ ansi Cyan ++ show board1 ++ ansi Reset)
     putStrLn ""
 
-    -- Print updated board
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "Main: Printing updated board:")
-    printBoard board
+    -- Print board1
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Printing updated board:")
+    printBoard board1
     putStrLn ""
 
 
