@@ -170,4 +170,5 @@ main = do
 -- - Update the cell variables based on user input, fill with an 'X' for now (currently not working)
 -- - Implement check to see if the selected cell is already filled
 -- - Implement player switching
--- - Implement win condition checking
+-- - Implement different colors for each player
+-- - Implement check for win conditions
