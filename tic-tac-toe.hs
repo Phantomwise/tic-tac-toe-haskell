@@ -128,26 +128,27 @@ main :: IO ()
 main = do
 
     -- Set up the initial board
-    let board :: [Cell]
-        board = replicate 9 Empty
-    printBoard board
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board = " ++ ansi Cyan ++ show board ++ ansi Reset)
+    let board0 :: [Cell]
+        board0 = replicate 9 Empty
+    printBoard board0
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board0 = " ++ ansi Cyan ++ show board0 ++ ansi Reset)
 
     -- Move 1
     let move = 1
     putStrLn ("It's " ++ ansi Yellow ++ "player " ++ show (playerMove move) ++ ansi Reset ++ "'s turn")
-
     -- Move 1: Get user input
     n <- playerUserInput
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
+    -- Move 1: Check occupancy
+    let occupancy = board0 !! (n - 1)
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: occupancy = " ++ ansi Cyan ++ show occupancy ++ ansi Reset)
+    let occupancyBool = if occupancy == Empty then False else True
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: occupancyBool = " ++ ansi Cyan ++ show occupancyBool ++ ansi Reset)
     putStrLn ""
-
     -- Move 1: Update cells
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Updating cell variables (not yet working)")
-    let board1 = updateCell n (playerMove move) board
+    let board1 = updateCell n (playerMove move) board0
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board1 = " ++ ansi Cyan ++ show board1 ++ ansi Reset)
     putStrLn ""
-
     -- Move 1: Print board
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Printing updated board:")
     printBoard board1
@@ -156,18 +157,19 @@ main = do
     -- Move 2
     let move = 2
     putStrLn ("It's " ++ ansi Yellow ++ "player " ++ show (playerMove move) ++ ansi Reset ++ "'s turn")
-
     -- Move 2: Get user input
     n <- playerUserInput
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
+    -- Move 2: Check occupancy
+    let occupancy = board1 !! (n - 1)
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: occupancy = " ++ ansi Cyan ++ show occupancy ++ ansi Reset)
+    let occupancyBool = if occupancy == Empty then False else True
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: occupancyBool = " ++ ansi Cyan ++ show occupancyBool ++ ansi Reset)
     putStrLn ""
-
     -- Move 2: Update cells
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Updating cell variables (not yet working)")
     let board2 = updateCell n (playerMove move) board1
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board2 = " ++ ansi Cyan ++ show board2 ++ ansi Reset)
     putStrLn ""
-
     -- Move 2: Print board
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Printing updated board:")
     printBoard board2
@@ -176,18 +178,19 @@ main = do
     -- Move 3
     let move = 3
     putStrLn ("It's " ++ ansi Yellow ++ "player " ++ show (playerMove move) ++ ansi Reset ++ "'s turn")
-
     -- Move 3: Get user input
     n <- playerUserInput
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
+    -- Move 3: Check occupancy
+    let occupancy = board2 !! (n - 1)
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: occupancy = " ++ ansi Cyan ++ show occupancy ++ ansi Reset)
+    let occupancyBool = if occupancy == Empty then False else True
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: occupancyBool = " ++ ansi Cyan ++ show occupancyBool ++ ansi Reset)
     putStrLn ""
-
     -- Move 3: Update cells
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Updating cell variables (not yet working)")
     let board3 = updateCell n (playerMove move) board2
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board3 = " ++ ansi Cyan ++ show board3 ++ ansi Reset)
     putStrLn ""
-
     -- Move 3: Print board
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Printing updated board:")
     printBoard board3
