@@ -39,11 +39,9 @@ ansi Magenta = "\ESC[0;35m"
 ansi Cyan    = "\ESC[0;36m"
 ansi Reset   = "\ESC[0m"
 
-{-
--- Cells IDs
-cellsids     = [1, 2, 3, 4, 5, 6, 7, 8, 9]
--}
 
+-- Cells IDs
+-- cellsIDs     = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 -- ┏━━━┳━━━┳━━━┓
 -- ┃ 7 ┃ 8 ┃ 9 ┃
 -- ┣━━━╋━━━╋━━━┫
@@ -54,6 +52,7 @@ cellsids     = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 
 -- Mapping cells IDs to rows, columns and diagonals
+-- NB: Not actually used for anything
 row1ids, row2ids, row3ids, column1ids, column2ids, column3ids, diagonal1ids, diagonal2ids :: [Int]
 row1ids      = [7, 8, 9]
 row2ids      = [4, 5, 6]
@@ -226,6 +225,9 @@ main = do
 {-
 TODO:
 - Implement different colors for each player
+- Implement player names
+- Implement games history
+- Implement stats
 
 DONE:
 - Set up board
