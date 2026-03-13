@@ -97,7 +97,7 @@ validateUserInput k
 -- Function to get user input and validate it
 playerUserInput :: IO Int
 playerUserInput = do
-    putStrLn "Press a number from 1 to 9 to select a cell to play (numpad order)"
+    putStrLn (ansi Yellow ++ "Press a number from 1 to 9 to select a cell to play (numpad order)" ++ ansi Reset)
     k <- getChar
     _ <- getLine -- Trash everything after the first character and be mad at having to deal with newlines and buffers >_<
     case validateUserInput k of
@@ -157,7 +157,7 @@ gameLoop board move = do
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: isOccupiedAt board n = " ++ ansi Cyan ++ show (isOccupiedAt board n) ++ ansi Reset)
     if isOccupiedAt board n == True then do
-        putStrLn ("That cell is already occupied, please pick another one.")
+        putStrLn (ansi Yellow ++ "That cell is already occupied, please pick another one." ++ ansi Reset)
         gameLoop board move
     else do
         let newBoard :: [Cell]
