@@ -147,6 +147,27 @@ isOccupiedAt board cellNb
     | otherwise = False
 
 
+-- Check for win conditions
+winCheck :: [Cell] -> Maybe Cell
+winCheck [X,X,X,_,_,_,_,_,_] = Just X
+winCheck [_,_,_,X,X,X,_,_,_] = Just X
+winCheck [_,_,_,_,_,_,X,X,X] = Just X
+winCheck [X,_,_,X,_,_,X,_,_] = Just X
+winCheck [_,X,_,_,X,_,_,X,_] = Just X
+winCheck [_,_,X,_,_,X,_,_,X] = Just X
+winCheck [X,_,_,_,X,_,_,_,X] = Just X
+winCheck [_,_,X,_,X,_,X,_,_] = Just X
+winCheck [O,O,O,_,_,_,_,_,_] = Just O
+winCheck [_,_,_,O,O,O,_,_,_] = Just O
+winCheck [_,_,_,_,_,_,O,O,O] = Just O
+winCheck [O,_,_,O,_,_,O,_,_] = Just O
+winCheck [_,O,_,_,O,_,_,O,_] = Just O
+winCheck [_,_,O,_,_,O,_,_,O] = Just O
+winCheck [O,_,_,_,O,_,_,_,O] = Just O
+winCheck [_,_,O,_,O,_,O,_,_] = Just O
+winCheck _ = Nothing
+
+
 -- Check remaining free cells
 fullBoard :: [Cell] -> Bool
 fullBoard board = if elem Empty board then False else True
@@ -168,12 +189,20 @@ gameLoop board move = do
         let newBoard :: [Cell]
             newBoard = updateCell n (playerMove move) board
         putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: fullBoard newBoard = " ++ ansi Cyan ++ show (fullBoard newBoard) ++ ansi Reset)
-        if fullBoard newBoard == True then do
-            printBoard newBoard
-            putStrLn (ansi Yellow ++ "It's a draw!" ++ ansi Reset)
-        else do
-            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
-            gameLoop newBoard (move + 1)
+        case winCheck newBoard of
+            Just p -> do
+                printBoard newBoard
+                putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
+                putStrLn (ansi Yellow ++ "Congrats!" ++ ansi Reset)
+                putStrLn (ansi Yellow ++ "Player " ++ show (playerMove move) ++ " won at move " ++ show move ++ ansi Reset)
+            Nothing ->
+                if fullBoard newBoard == True then do
+                    printBoard newBoard
+                    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
+                    putStrLn (ansi Yellow ++ "It's a draw!" ++ ansi Reset)
+                else do
+                    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
+                    gameLoop newBoard (move + 1)
 
 
 main :: IO ()
@@ -183,9 +212,7 @@ main = do
 
 {-
 TODO:
-- Refactor the board update in a less stupid way
 - Implement different colors for each player
-- Implement check for win conditions
 
 DONE:
 - Set up board
@@ -195,4 +222,6 @@ DONE:
 - Alternate players
 - Track move count
 - Occupancy check
+- Win conditions
+- Draw conditions
 -}
