@@ -285,6 +285,7 @@ main = do
 {-
 TODO:
 - Actually use player names
+- Use row/column/diagonal mappings + `all` to check for win conditions
 - Implement different colors for each player
 - Implement stats
 - Rewrite functions to get player names to avoid duplicating code for both players
