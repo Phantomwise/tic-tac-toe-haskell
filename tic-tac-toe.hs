@@ -1,6 +1,19 @@
 -- Tic Tac Toe
 
 
+-- Enable/disable debug messages
+debug :: Bool
+debug = True
+
+
+-- Print debug messages
+printDebug :: String -> IO ()
+printDebug msg =
+    if debug
+        then putStrLn (ansi Magenta ++ "[DEBUG] " ++ ansi Reset ++ msg)
+        else return ()
+
+
 -- Define a new type for the content of the cells
 data Cell = Empty | X | O
     deriving (Eq)
@@ -68,7 +81,7 @@ printBoard board = do
         cell8 = board !! 7
         cell9 = board !! 8
 
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "printBoard: Printing the current board:")
+    printDebug ("printBoard: Printing the current board:")
     putStrLn "┏━━━┳━━━┳━━━┓"
     putStrLn ("┃ " ++ show cell7 ++ " ┃ " ++ show cell8 ++ " ┃ " ++ show cell9 ++ " ┃")
     putStrLn "┣━━━╋━━━╋━━━┫"
@@ -102,14 +115,14 @@ playerUserInput = do
     _ <- getLine -- Trash everything after the first character and be mad at having to deal with newlines and buffers >_<
     case validateUserInput k of
         Left err -> do
-            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: Key pressed: " ++ ansi Cyan ++ show k ++ ansi Reset)
+            printDebug ("playerUserInput: Key pressed: " ++ ansi Cyan ++ show k ++ ansi Reset)
             putStrLn (ansi Red ++ "ERROR: " ++ ansi Reset ++ "Invalid input, please try again.")
-            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: User input invalid: " ++ ansi Cyan ++ show (validateUserInput k) ++ ansi Reset)
+            printDebug ("playerUserInput: User input invalid: " ++ ansi Cyan ++ show (validateUserInput k) ++ ansi Reset)
             playerUserInput
         Right n -> do
-            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: Key pressed: " ++ ansi Cyan ++ show k ++ ansi Reset)
-            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: User input validated: " ++ "validateUserInput k = " ++ ansi Cyan ++ show (validateUserInput k) ++ ansi Reset)
-            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: User input validated: " ++ "n = " ++ ansi Cyan ++ show n ++ ansi Reset)
+            printDebug ("playerUserInput: Key pressed: " ++ ansi Cyan ++ show k ++ ansi Reset)
+            printDebug ("playerUserInput: User input validated: " ++ "validateUserInput k = " ++ ansi Cyan ++ show (validateUserInput k) ++ ansi Reset)
+            printDebug ("playerUserInput: User input validated: " ++ "n = " ++ ansi Cyan ++ show n ++ ansi Reset)
             putStrLn ""
             return n
 
@@ -176,32 +189,32 @@ fullBoard board = if elem Empty board then False else True
 gameLoop :: [Cell] -> Int -> IO ()
 gameLoop board move = do
     printBoard board
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: board = " ++ ansi Cyan ++ show board ++ ansi Reset)
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: move = " ++ ansi Cyan ++ show (move) ++ ansi Reset)
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: playerMove move = " ++ ansi Cyan ++ show (playerMove move) ++ ansi Reset)
+    printDebug ("gameLoop: board = " ++ ansi Cyan ++ show board ++ ansi Reset)
+    printDebug ("gameLoop: move = " ++ ansi Cyan ++ show (move) ++ ansi Reset)
+    printDebug ("gameLoop: playerMove move = " ++ ansi Cyan ++ show (playerMove move) ++ ansi Reset)
     n <- playerUserInput
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: isOccupiedAt board n = " ++ ansi Cyan ++ show (isOccupiedAt board n) ++ ansi Reset)
+    printDebug ("gameLoop: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
+    printDebug ("gameLoop: isOccupiedAt board n = " ++ ansi Cyan ++ show (isOccupiedAt board n) ++ ansi Reset)
     if isOccupiedAt board n == True then do
         putStrLn (ansi Yellow ++ "That cell is already occupied, please pick another one." ++ ansi Reset)
         gameLoop board move
     else do
         let newBoard :: [Cell]
             newBoard = updateCell n (playerMove move) board
-        putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: fullBoard newBoard = " ++ ansi Cyan ++ show (fullBoard newBoard) ++ ansi Reset)
+        printDebug ("gameLoop: fullBoard newBoard = " ++ ansi Cyan ++ show (fullBoard newBoard) ++ ansi Reset)
         case winCheck newBoard of
             Just p -> do
                 printBoard newBoard
-                putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
+                printDebug ("gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
                 putStrLn (ansi Yellow ++ "Congrats!" ++ ansi Reset)
                 putStrLn (ansi Yellow ++ "Player " ++ show (playerMove move) ++ " won at move " ++ show move ++ ansi Reset)
             Nothing ->
                 if fullBoard newBoard == True then do
                     printBoard newBoard
-                    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
+                    printDebug ("gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
                     putStrLn (ansi Yellow ++ "It's a draw!" ++ ansi Reset)
                 else do
-                    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
+                    printDebug ("gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
                     gameLoop newBoard (move + 1)
 
 
