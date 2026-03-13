@@ -158,19 +158,20 @@ gameLoop board move = do
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: board = " ++ ansi Cyan ++ show board ++ ansi Reset)
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: move = " ++ ansi Cyan ++ show (move) ++ ansi Reset)
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: playerMove move = " ++ ansi Cyan ++ show (playerMove move) ++ ansi Reset)
-    if fullBoard board == True then do
-        putStrLn (ansi Yellow ++ "It's a draw!" ++ ansi Reset)
+    n <- playerUserInput
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: isOccupiedAt board n = " ++ ansi Cyan ++ show (isOccupiedAt board n) ++ ansi Reset)
+    if isOccupiedAt board n == True then do
+        putStrLn (ansi Yellow ++ "That cell is already occupied, please pick another one." ++ ansi Reset)
+        gameLoop board move
     else do
-        putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: fullBoard board = " ++ ansi Cyan ++ show (fullBoard board) ++ ansi Reset)
-        n <- playerUserInput
-        putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
-        putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: isOccupiedAt board n = " ++ ansi Cyan ++ show (isOccupiedAt board n) ++ ansi Reset)
-        if isOccupiedAt board n == True then do
-            putStrLn (ansi Yellow ++ "That cell is already occupied, please pick another one." ++ ansi Reset)
-            gameLoop board move
+        let newBoard :: [Cell]
+            newBoard = updateCell n (playerMove move) board
+        putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: fullBoard newBoard = " ++ ansi Cyan ++ show (fullBoard newBoard) ++ ansi Reset)
+        if fullBoard newBoard == True then do
+            printBoard newBoard
+            putStrLn (ansi Yellow ++ "It's a draw!" ++ ansi Reset)
         else do
-            let newBoard :: [Cell]
-                newBoard = updateCell n (playerMove move) board
             putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
             gameLoop newBoard (move + 1)
 
