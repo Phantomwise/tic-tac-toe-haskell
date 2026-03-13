@@ -126,6 +126,27 @@ playerMove m
     | otherwise = O
 
 
+{-
+-- Occupancy boolean
+isOccupied :: Cell -> Bool
+isOccupied X = True
+isOccupied O = True
+isOccupied Empty = False
+
+-- Check occupancy
+isOccupiedAt :: [Cell] -> Int -> Bool
+isOccupiedAt board cellNb = isOccupied (board !! (cellNb - 1))
+-}
+
+
+-- Check occupancy
+isOccupiedAt :: [Cell] -> Int -> Bool
+isOccupiedAt board cellNb
+    | (board !! (cellNb - 1)) == X = True
+    | (board !! (cellNb - 1)) == O = True
+    | otherwise = False
+
+
 gameLoop :: [Cell] -> Int -> IO ()
 gameLoop board move = do
     printBoard board
@@ -134,10 +155,15 @@ gameLoop board move = do
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: playerMove move = " ++ ansi Cyan ++ show (playerMove move) ++ ansi Reset)
     n <- playerUserInput
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
-    let newBoard :: [Cell]
-        newBoard = updateCell n (playerMove move) board
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
-    gameLoop newBoard (move + 1)
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: isOccupiedAt board n = " ++ ansi Cyan ++ show (isOccupiedAt board n) ++ ansi Reset)
+    if isOccupiedAt board n == True then do
+        putStrLn ("That cell is already occupied, please pick another one.")
+        gameLoop board move
+    else do
+        let newBoard :: [Cell]
+            newBoard = updateCell n (playerMove move) board
+        putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
+        gameLoop newBoard (move + 1)
 
 
 main :: IO ()
@@ -148,7 +174,6 @@ main = do
 {-
 TODO:
 - Refactor the board update in a less stupid way
-- Implement occupancy check
 - Implement different colors for each player
 - Implement check for win conditions
 
@@ -159,4 +184,5 @@ DONE:
 - Create a new board for each move
 - Alternate players
 - Track move count
+- Occupancy check
 -}
