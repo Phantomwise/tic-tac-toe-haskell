@@ -102,12 +102,12 @@ playerUserInput = do
     _ <- getLine -- Trash everything after the first character and be mad at having to deal with newlines and buffers >_<
     case validateUserInput k of
         Left err -> do
-            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: Key pressed: " ++ ansi Cyan ++ [k] ++ ansi Reset)
+            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: Key pressed: " ++ ansi Cyan ++ show k ++ ansi Reset)
             putStrLn (ansi Red ++ "ERROR: " ++ ansi Reset ++ "Invalid input, please try again.")
             putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: User input invalid: " ++ ansi Cyan ++ show (validateUserInput k) ++ ansi Reset)
             playerUserInput
         Right n -> do
-            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: Key pressed: " ++ ansi Cyan ++ [k] ++ ansi Reset)
+            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: Key pressed: " ++ ansi Cyan ++ show k ++ ansi Reset)
             putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: User input validated: " ++ "validateUserInput k = " ++ ansi Cyan ++ show (validateUserInput k) ++ ansi Reset)
             putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "playerUserInput: User input validated: " ++ "n = " ++ ansi Cyan ++ show n ++ ansi Reset)
             putStrLn ""
