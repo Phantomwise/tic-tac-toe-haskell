@@ -1,6 +1,10 @@
 -- Tic Tac Toe
 
 
+-- Imports
+import Data.Char (isSpace)
+
+
 -- Enable/disable debug messages
 debug :: Bool
 debug = True
@@ -62,6 +66,45 @@ column2ids   = [8, 5, 2]
 column3ids   = [9, 6, 3]
 diagonal1ids = [7, 5, 3]
 diagonal2ids = [9, 5, 1]
+
+
+-- Function to get the name of Player X
+getPlayerX :: IO String
+getPlayerX = do
+    putStr (ansi Yellow ++ "Enter the name of Player X: " ++ ansi Reset)
+    playerX <- getLine
+    printDebug ("getPlayerX: playerX = " ++ ansi Cyan ++ show playerX ++ ansi Reset)
+    if (null playerX == True) || (all isSpace playerX == True)
+        then do
+            putStrLn (ansi Red ++ "The name of Player X can't be empty or whitespace." ++ ansi Reset)
+            getPlayerX
+        else do
+            putStrLn (ansi Yellow ++ "The name of Player X is " ++ ansi Reset ++ playerX)
+            return playerX
+
+
+-- Function to get the name of Player O
+getPlayerO :: IO String
+getPlayerO = do
+    putStr (ansi Yellow ++ "Enter the name of Player O: " ++ ansi Reset)
+    playerO <- getLine
+    printDebug ("getPlayerO: playerO = " ++ ansi Cyan ++ show playerO ++ ansi Reset)
+    if (null playerO == True) || (all isSpace playerO == True)
+        then do
+            putStrLn (ansi Yellow ++ "The name of Player O can't be empty or whitespace." ++ ansi Reset)
+            getPlayerO
+        else do
+            putStrLn (ansi Yellow ++ "The name of Player X is " ++ ansi Reset ++ playerO)
+            return playerO
+
+
+-- Function to get the name of Player B
+getPlayerNameB :: IO String
+getPlayerNameB = do
+    putStr (ansi Yellow ++ "Enter the name of Player B:  ")
+    playerB <- getLine
+    printDebug ("getPlayerNameB: playerB = " ++ ansi Cyan ++ show playerB)
+    return playerB
 
 
 -- Function to print the current board
@@ -219,17 +262,22 @@ gameLoop board move = do
 
 main :: IO ()
 main = do
+    playerX <- getPlayerX
+    playerO <- getPlayerO
     gameLoop (replicate 9 Empty) 1
 
 
 {-
 TODO:
+- Actually use player names
 - Implement different colors for each player
-- Implement player names
 - Implement games history
 - Implement stats
+- Rewrite functions to get player names to avoid duplicating code for both players
+- Deal the buffers
 
 DONE:
+- Get player names
 - Set up board
 - Get user input
 - Validate user input
