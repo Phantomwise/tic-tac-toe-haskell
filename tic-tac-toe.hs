@@ -3,6 +3,7 @@
 
 -- Imports
 import Data.Char (isSpace)
+import System.Directory (doesFileExist)
 
 
 -- Enable/disable debug messages
@@ -42,6 +43,10 @@ ansi Blue    = "\ESC[0;34m"
 ansi Magenta = "\ESC[0;35m"
 ansi Cyan    = "\ESC[0;36m"
 ansi Reset   = "\ESC[0m"
+
+
+-- Files
+historyFile = "history.csv" :: FilePath
 
 
 -- Cells IDs
@@ -228,8 +233,8 @@ fullBoard :: [Cell] -> Bool
 fullBoard board = if elem Empty board then False else True
 
 
-gameLoop :: [Cell] -> Int -> IO ()
-gameLoop board move = do
+gameLoop :: [Cell] -> Int -> (String,String) -> IO ()
+gameLoop board move (playerX, playerO) = do
     printBoard board
     printDebug ("gameLoop: board = " ++ ansi Cyan ++ show board ++ ansi Reset)
     printDebug ("gameLoop: move = " ++ ansi Cyan ++ show (move) ++ ansi Reset)
@@ -239,7 +244,7 @@ gameLoop board move = do
     printDebug ("gameLoop: isOccupiedAt board n = " ++ ansi Cyan ++ show (isOccupiedAt board n) ++ ansi Reset)
     if isOccupiedAt board n == True then do
         putStrLn (ansi Yellow ++ "That cell is already occupied, please pick another one." ++ ansi Reset)
-        gameLoop board move
+        gameLoop board move (playerX, playerO)
     else do
         let newBoard :: [Cell]
             newBoard = updateCell n (playerMove move) board
@@ -250,28 +255,37 @@ gameLoop board move = do
                 printDebug ("gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
                 putStrLn (ansi Yellow ++ "Congrats!" ++ ansi Reset)
                 putStrLn (ansi Yellow ++ "Player " ++ show (playerMove move) ++ " won at move " ++ show move ++ ansi Reset)
+                appendFile historyFile ("\"" ++ show newBoard ++ "\"" ++ "," ++ show playerX ++ "," ++ show playerO ++ "," ++ show (playerMove move) ++ "," ++ show move ++ "\n")
             Nothing ->
                 if fullBoard newBoard == True then do
                     printBoard newBoard
                     printDebug ("gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
                     putStrLn (ansi Yellow ++ "It's a draw!" ++ ansi Reset)
+                    appendFile historyFile ("\"" ++ show newBoard ++ "\"" ++ "," ++ show playerX ++ "," ++ show playerO ++ "," ++ "" ++ "," ++ show move ++ "\n")
                 else do
                     printDebug ("gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
-                    gameLoop newBoard (move + 1)
+                    gameLoop newBoard (move + 1) (playerX, playerO)
 
 
 main :: IO ()
 main = do
+    historyFileExists <- doesFileExist historyFile
+    if historyFileExists == True
+        then
+            printDebug ("main: historyFileExists = " ++ ansi Green ++ show historyFileExists ++ ansi Reset)
+        else do
+            printDebug ("main: historyFileExists = " ++ ansi Red ++ show historyFileExists ++ ansi Reset)
+            writeFile historyFile ("Board,Player X,Player O,Winner,Moves" ++ "\n")
+            printDebug ("main: " ++ ansi Green ++ "History file created" ++ ansi Reset)
     playerX <- getPlayerX
     playerO <- getPlayerO
-    gameLoop (replicate 9 Empty) 1
+    gameLoop (replicate 9 Empty) 1 (playerX, playerO)
 
 
 {-
 TODO:
 - Actually use player names
 - Implement different colors for each player
-- Implement games history
 - Implement stats
 - Rewrite functions to get player names to avoid duplicating code for both players
 - Deal the buffers
@@ -287,4 +301,5 @@ DONE:
 - Occupancy check
 - Win conditions
 - Draw conditions
+- Games history
 -}
