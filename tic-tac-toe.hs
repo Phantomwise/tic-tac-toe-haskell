@@ -51,6 +51,7 @@ column3ids   = [9, 6, 3]
 diagonal1ids = [7, 5, 3]
 diagonal2ids = [9, 5, 1]
 
+
 -- Function to print the current board
 printBoard :: [Cell] -> IO ()
 printBoard board = do
@@ -115,7 +116,7 @@ playerUserInput = do
 
 -- Function to update the board
 updateCell :: Int -> Cell -> [Cell] -> [Cell]
-updateCell pos val xs = take (pos - 1) xs ++ [val] ++ drop pos xs
+updateCell cellNb symbol xs = take (cellNb - 1) xs ++ [symbol] ++ drop cellNb xs
 
 
 -- Player for each move
@@ -124,77 +125,24 @@ playerMove m
     | odd m = X
     | otherwise = O
 
+
+gameLoop :: [Cell] -> Int -> IO ()
+gameLoop board move = do
+    printBoard board
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: board = " ++ ansi Cyan ++ show board ++ ansi Reset)
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: move = " ++ ansi Cyan ++ show (move) ++ ansi Reset)
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: playerMove move = " ++ ansi Cyan ++ show (playerMove move) ++ ansi Reset)
+    n <- playerUserInput
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
+    let newBoard :: [Cell]
+        newBoard = updateCell n (playerMove move) board
+    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
+    gameLoop newBoard (move + 1)
+
+
 main :: IO ()
 main = do
-
-    -- Set up the initial board
-    let board0 :: [Cell]
-        board0 = replicate 9 Empty
-    printBoard board0
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board0 = " ++ ansi Cyan ++ show board0 ++ ansi Reset)
-
-    -- Move 1
-    let move = 1
-    putStrLn ("It's " ++ ansi Yellow ++ "player " ++ show (playerMove move) ++ ansi Reset ++ "'s turn")
-    -- Move 1: Get user input
-    n <- playerUserInput
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
-    -- Move 1: Check occupancy
-    let occupancy = board0 !! (n - 1)
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: occupancy = " ++ ansi Cyan ++ show occupancy ++ ansi Reset)
-    let occupancyBool = if occupancy == Empty then False else True
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: occupancyBool = " ++ ansi Cyan ++ show occupancyBool ++ ansi Reset)
-    putStrLn ""
-    -- Move 1: Update cells
-    let board1 = updateCell n (playerMove move) board0
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board1 = " ++ ansi Cyan ++ show board1 ++ ansi Reset)
-    putStrLn ""
-    -- Move 1: Print board
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Printing updated board:")
-    printBoard board1
-    putStrLn ""
-
-    -- Move 2
-    let move = 2
-    putStrLn ("It's " ++ ansi Yellow ++ "player " ++ show (playerMove move) ++ ansi Reset ++ "'s turn")
-    -- Move 2: Get user input
-    n <- playerUserInput
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
-    -- Move 2: Check occupancy
-    let occupancy = board1 !! (n - 1)
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: occupancy = " ++ ansi Cyan ++ show occupancy ++ ansi Reset)
-    let occupancyBool = if occupancy == Empty then False else True
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: occupancyBool = " ++ ansi Cyan ++ show occupancyBool ++ ansi Reset)
-    putStrLn ""
-    -- Move 2: Update cells
-    let board2 = updateCell n (playerMove move) board1
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board2 = " ++ ansi Cyan ++ show board2 ++ ansi Reset)
-    putStrLn ""
-    -- Move 2: Print board
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Printing updated board:")
-    printBoard board2
-    putStrLn ""
-
-    -- Move 3
-    let move = 3
-    putStrLn ("It's " ++ ansi Yellow ++ "player " ++ show (playerMove move) ++ ansi Reset ++ "'s turn")
-    -- Move 3: Get user input
-    n <- playerUserInput
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
-    -- Move 3: Check occupancy
-    let occupancy = board2 !! (n - 1)
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: occupancy = " ++ ansi Cyan ++ show occupancy ++ ansi Reset)
-    let occupancyBool = if occupancy == Empty then False else True
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: occupancyBool = " ++ ansi Cyan ++ show occupancyBool ++ ansi Reset)
-    putStrLn ""
-    -- Move 3: Update cells
-    let board3 = updateCell n (playerMove move) board2
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: board3 = " ++ ansi Cyan ++ show board3 ++ ansi Reset)
-    putStrLn ""
-    -- Move 3: Print board
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "main: Printing updated board:")
-    printBoard board3
-    putStrLn ""
+    gameLoop (replicate 9 Empty) 1
 
 
 {-
