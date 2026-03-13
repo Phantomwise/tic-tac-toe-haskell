@@ -147,23 +147,32 @@ isOccupiedAt board cellNb
     | otherwise = False
 
 
+-- Check remaining free cells
+fullBoard :: [Cell] -> Bool
+fullBoard board = if elem Empty board then False else True
+
+
 gameLoop :: [Cell] -> Int -> IO ()
 gameLoop board move = do
     printBoard board
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: board = " ++ ansi Cyan ++ show board ++ ansi Reset)
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: move = " ++ ansi Cyan ++ show (move) ++ ansi Reset)
     putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: playerMove move = " ++ ansi Cyan ++ show (playerMove move) ++ ansi Reset)
-    n <- playerUserInput
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
-    putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: isOccupiedAt board n = " ++ ansi Cyan ++ show (isOccupiedAt board n) ++ ansi Reset)
-    if isOccupiedAt board n == True then do
-        putStrLn (ansi Yellow ++ "That cell is already occupied, please pick another one." ++ ansi Reset)
-        gameLoop board move
+    if fullBoard board == True then do
+        putStrLn (ansi Yellow ++ "It's a draw!" ++ ansi Reset)
     else do
-        let newBoard :: [Cell]
-            newBoard = updateCell n (playerMove move) board
-        putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
-        gameLoop newBoard (move + 1)
+        putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: fullBoard board = " ++ ansi Cyan ++ show (fullBoard board) ++ ansi Reset)
+        n <- playerUserInput
+        putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: n = " ++ ansi Cyan ++ show n ++ ansi Reset)
+        putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: isOccupiedAt board n = " ++ ansi Cyan ++ show (isOccupiedAt board n) ++ ansi Reset)
+        if isOccupiedAt board n == True then do
+            putStrLn (ansi Yellow ++ "That cell is already occupied, please pick another one." ++ ansi Reset)
+            gameLoop board move
+        else do
+            let newBoard :: [Cell]
+                newBoard = updateCell n (playerMove move) board
+            putStrLn (ansi Magenta ++ "DEBUG: " ++ ansi Reset ++ "gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
+            gameLoop newBoard (move + 1)
 
 
 main :: IO ()
