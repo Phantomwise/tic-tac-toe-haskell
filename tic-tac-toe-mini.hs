@@ -3,6 +3,7 @@
 
 -- Imports
 import Data.Char (isSpace)
+import System.IO (hSetBuffering, stdout, hFlush, BufferMode(LineBuffering))
 
 
 -- Enable/disable debug messages
@@ -72,6 +73,7 @@ diagonal2ids = [9, 5, 1]
 getPlayerX :: IO String
 getPlayerX = do
     putStr (ansi Yellow ++ "Enter the name of Player X: " ++ ansi Reset)
+    hFlush stdout -- Flush buffer
     playerX <- getLine
     printDebug ("getPlayerX: playerX = " ++ ansi Cyan ++ show playerX ++ ansi Reset)
     if (null playerX == True) || (all isSpace playerX == True)
@@ -87,6 +89,7 @@ getPlayerX = do
 getPlayerO :: IO String
 getPlayerO = do
     putStr (ansi Yellow ++ "Enter the name of Player O: " ++ ansi Reset)
+    hFlush stdout -- Flush buffer
     playerO <- getLine
     printDebug ("getPlayerO: playerO = " ++ ansi Cyan ++ show playerO ++ ansi Reset)
     if (null playerO == True) || (all isSpace playerO == True)
@@ -102,6 +105,7 @@ getPlayerO = do
 getPlayerNameB :: IO String
 getPlayerNameB = do
     putStr (ansi Yellow ++ "Enter the name of Player B:  ")
+    hFlush stdout -- Flush buffer
     playerB <- getLine
     printDebug ("getPlayerNameB: playerB = " ++ ansi Cyan ++ show playerB)
     return playerB
@@ -262,6 +266,7 @@ gameLoop board move = do
 
 main :: IO ()
 main = do
+    hSetBuffering stdout LineBuffering
     playerX <- getPlayerX
     playerO <- getPlayerO
     gameLoop (replicate 9 Empty) 1
