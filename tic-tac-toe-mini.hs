@@ -20,11 +20,11 @@ printDebug msg =
 
 
 -- Define a new type for the content of the cells
-data Cell = Empty | X | O
+data Symbol = Empty | X | O
     deriving (Eq)
     -- deriving (Eq, Show)
 
-instance Show Cell where
+instance Show Symbol where
     show Empty = "·"
     show X = "X"
     show O = "O"
@@ -112,11 +112,11 @@ getPlayerNameB = do
 
 
 -- Function to print the current board
-printBoard :: [Cell] -> IO ()
+printBoard :: [Symbol] -> IO ()
 printBoard board = do
 
     -- Map cells to board index
-    let cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9 :: Cell
+    let cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9 :: Symbol
         cell1 = board !! 0
         cell2 = board !! 1
         cell3 = board !! 2
@@ -174,12 +174,12 @@ playerUserInput = do
 
 
 -- Function to update the board
-updateCell :: Int -> Cell -> [Cell] -> [Cell]
+updateCell :: Int -> Symbol -> [Symbol] -> [Symbol]
 updateCell cellNb symbol xs = take (cellNb - 1) xs ++ [symbol] ++ drop cellNb xs
 
 
 -- Player for each move
-playerMove :: Int ->  Cell
+playerMove :: Int ->  Symbol
 playerMove m
     | odd m = X
     | otherwise = O
@@ -187,19 +187,19 @@ playerMove m
 
 {-
 -- Occupancy boolean
-isOccupied :: Cell -> Bool
+isOccupied :: Symbol -> Bool
 isOccupied X = True
 isOccupied O = True
 isOccupied Empty = False
 
 -- Check occupancy
-isOccupiedAt :: [Cell] -> Int -> Bool
+isOccupiedAt :: [Symbol] -> Int -> Bool
 isOccupiedAt board cellNb = isOccupied (board !! (cellNb - 1))
 -}
 
 
 -- Check occupancy
-isOccupiedAt :: [Cell] -> Int -> Bool
+isOccupiedAt :: [Symbol] -> Int -> Bool
 isOccupiedAt board cellNb
     | (board !! (cellNb - 1)) == X = True
     | (board !! (cellNb - 1)) == O = True
@@ -207,7 +207,7 @@ isOccupiedAt board cellNb
 
 
 -- Check for win conditions
-winCheck :: [Cell] -> Maybe Cell
+winCheck :: [Symbol] -> Maybe Symbol
 winCheck [X,X,X,_,_,_,_,_,_] = Just X
 winCheck [_,_,_,X,X,X,_,_,_] = Just X
 winCheck [_,_,_,_,_,_,X,X,X] = Just X
@@ -228,11 +228,11 @@ winCheck _ = Nothing
 
 
 -- Check remaining free cells
-fullBoard :: [Cell] -> Bool
+fullBoard :: [Symbol] -> Bool
 fullBoard board = if elem Empty board then False else True
 
 
-gameLoop :: [Cell] -> Int -> IO ()
+gameLoop :: [Symbol] -> Int -> IO ()
 gameLoop board move = do
     printBoard board
     printDebug ("gameLoop: board = " ++ ansi Cyan ++ show board ++ ansi Reset)
@@ -245,7 +245,7 @@ gameLoop board move = do
         putStrLn (ansi Yellow ++ "That cell is already occupied, please pick another one." ++ ansi Reset)
         gameLoop board move
     else do
-        let newBoard :: [Cell]
+        let newBoard :: [Symbol]
             newBoard = updateCell n (playerMove move) board
         printDebug ("gameLoop: fullBoard newBoard = " ++ ansi Cyan ++ show (fullBoard newBoard) ++ ansi Reset)
         case winCheck newBoard of
