@@ -237,8 +237,19 @@ fullBoard :: [Symbol] -> Bool
 fullBoard board = if elem Empty board then False else True
 
 
-gameLoop :: [Symbol] -> Int -> (String,String) -> IO ()
-gameLoop board move (playerX, playerO) = do
+-- Function to make a move log
+appendMoveLog :: [(Int, Symbol, Int)] -> Int -> Symbol -> Int -> [(Int, Symbol, Int)]
+appendMoveLog moveLog move symbol cellNb = moveLog ++ [(move, symbol, cellNb)]
+
+
+{-
+moveLog :: Int -> Symbol -> Int -> [Symbol] -> [(Int, Symbol, Int, [Symbol])]
+moveLog move player cellNb board = moveLog ++ [(move, symbol, player, board)]
+-}
+
+
+gameLoop :: [Symbol] -> Int -> (String,String) -> [(Int, Symbol, Int)] -> IO ()
+gameLoop board move (playerX, playerO) moveLog = do
     printBoard board
     printDebug ("gameLoop: board = " ++ ansi Cyan ++ show board ++ ansi Reset)
     printDebug ("gameLoop: move = " ++ ansi Cyan ++ show (move) ++ ansi Reset)
@@ -248,43 +259,51 @@ gameLoop board move (playerX, playerO) = do
     printDebug ("gameLoop: isOccupiedAt board n = " ++ ansi Cyan ++ show (isOccupiedAt board n) ++ ansi Reset)
     if isOccupiedAt board n == True then do
         putStrLn (ansi Yellow ++ "That cell is already occupied, please pick another one." ++ ansi Reset)
-        gameLoop board move (playerX, playerO)
+        gameLoop board move (playerX, playerO) moveLog
     else do
         let newBoard :: [Symbol]
             newBoard = updateCell n (playerMove move) board
         printDebug ("gameLoop: fullBoard newBoard = " ++ ansi Cyan ++ show (fullBoard newBoard) ++ ansi Reset)
+
+        let newLog = appendMoveLog moveLog move (playerMove move) n
+        printDebug ("gameLoop: appendMoveLog moveLog move (playerMove move) n = " ++ ansi Cyan ++ show (appendMoveLog moveLog move (playerMove move) n) ++ ansi Reset)
+        printDebug ("gameLoop: moveLog = " ++ ansi Cyan ++ show moveLog ++ ansi Reset)
+        printDebug ("gameLoop: newLog = " ++ ansi Cyan ++ show newLog ++ ansi Reset)
         case winCheck newBoard of
             Just p -> do
                 printBoard newBoard
                 printDebug ("gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
                 putStrLn (ansi Yellow ++ "Congrats!" ++ ansi Reset)
                 putStrLn (ansi Yellow ++ "Player " ++ show (playerMove move) ++ " won at move " ++ show move ++ ansi Reset)
-                appendFile historyFile ("\"" ++ show newBoard ++ "\"" ++ "," ++ show playerX ++ "," ++ show playerO ++ "," ++ show (playerMove move) ++ "," ++ show move ++ "\n")
+                appendFile historyFile (show playerX ++ "," ++ show playerO ++ "," ++ show (playerMove move) ++ "," ++ show move ++ "," ++ "\"" ++ show (newLog) ++ "\"" ++ "," ++ "\"" ++ show newBoard ++ "\"" ++ "\n")
             Nothing ->
                 if fullBoard newBoard == True then do
                     printBoard newBoard
                     printDebug ("gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
                     putStrLn (ansi Yellow ++ "It's a draw!" ++ ansi Reset)
-                    appendFile historyFile ("\"" ++ show newBoard ++ "\"" ++ "," ++ show playerX ++ "," ++ show playerO ++ "," ++ "" ++ "," ++ show move ++ "\n")
+                    appendFile historyFile (show playerX ++ "," ++ show playerO ++ "," ++ show "" ++ "," ++ show move ++ "," ++ "\"" ++ show (newLog) ++ "\"" ++ "," ++ "\"" ++ show newBoard ++ "\"" ++ "\n")
                 else do
                     printDebug ("gameLoop: newBoard = " ++ ansi Cyan ++ show newBoard ++ ansi Reset)
-                    gameLoop newBoard (move + 1) (playerX, playerO)
+                    gameLoop newBoard (move + 1) (playerX, playerO) newLog
 
 
 main :: IO ()
 main = do
     hSetBuffering stdout LineBuffering
+    -- Initialize moveLog
+    let moveLog :: [(Int, Symbol, Int)]
+        moveLog = []
     historyFileExists <- doesFileExist historyFile
     if historyFileExists == True
         then
             printDebug ("main: historyFileExists = " ++ ansi Green ++ show historyFileExists ++ ansi Reset)
         else do
             printDebug ("main: historyFileExists = " ++ ansi Red ++ show historyFileExists ++ ansi Reset)
-            writeFile historyFile ("Board,Player X,Player O,Winner,Moves" ++ "\n")
+            writeFile historyFile ("Player X,Player O,Winner,Moves,Move Log,Board" ++ "\n")
             printDebug ("main: " ++ ansi Green ++ "History file created" ++ ansi Reset)
     playerX <- getPlayerX
     playerO <- getPlayerO
-    gameLoop (replicate 9 Empty) 1 (playerX, playerO)
+    gameLoop (replicate 9 Empty) 1 (playerX, playerO) moveLog
 
 
 {-
@@ -308,4 +327,5 @@ DONE:
 - Win conditions
 - Draw conditions
 - Games history
+- Moves history
 -}
