@@ -313,7 +313,9 @@ TODO:
 - Implement different colors for each player
 - Implement stats
 - Rewrite functions to get player names to avoid duplicating code for both players
-- Deal the buffers
+- Use nushell to display the history in-game
+- Put errors and debug in stderr
+- follow XDG specs
 
 DONE:
 - Get player names
@@ -328,4 +330,5 @@ DONE:
 - Draw conditions
 - Games history
 - Moves history
+- Deal the buffers
 -}
