@@ -270,25 +270,3 @@ main = do
     playerX <- getPlayerX
     playerO <- getPlayerO
     gameLoop (replicate 9 Empty) 1
-
-
-{-
-TODO:
-- Implement different colors for each player
-- Implement player names
-- Implement games history
-- Implement stats
-- Rewrite functions to get player names to avoid duplicating code for both players
-- Deal the buffers
-
-DONE:
-- Set up board
-- Get user input
-- Validate user input
-- Create a new board for each move
-- Alternate players
-- Track move count
-- Occupancy check
-- Win conditions
-- Draw conditions
--}
